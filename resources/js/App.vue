@@ -6,13 +6,18 @@
             <input type="file" @change="onChange" />
             <button type="submit"> submit</button>
         </form>
+
+        <div v-for="paths in img" :key="paths.id">
+             <img class="image" :src="`storage/uploads/${paths.name}`" alt="image">
+        </div>
     </div>
 </template>
 <script>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 export default {
     setup() {
         const file = ref('')
+        const img = ref([])
         const success = ref(false)
         const onChange = (e)=>{
             file.value = e.target.files[0];
@@ -30,16 +35,36 @@ export default {
             .then((res)=>{
                 file.value = '';
                 success.value = true;
+                 getImage();
             }).catch((err)=>{
                 console.log(err)
             });
+        }
+        onMounted(()=>{
+            getImage();
+        })
+        const getImage = async () =>{
+            let response  = await axios.get('/api/getImg');
+            console.log(response.data.length)
+            img.value = response.data
+
+
         }
         return{
             submit,
             onChange,
             file,
-            success
+            success,
+            getImage,
+            img
         }
     },
 }
 </script>
+<style scoped>
+.image{
+    margin-top: 10px;
+    height: 400px;
+    width: 25vw;
+}
+</style>

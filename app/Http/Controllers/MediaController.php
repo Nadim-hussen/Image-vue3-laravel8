@@ -6,6 +6,10 @@ use Illuminate\Http\Request;
 use App\Models\Media;
 class MediaController extends Controller
 {
+    public function getImg(){
+        $data = Media::all();
+        return $data;
+    }
     public function upload(Request $request){
         $request->validate([
             'file' => 'required|mimes:jpg,jpeg,png,csv,txt,xlx,xls,pdf|max:2048'
